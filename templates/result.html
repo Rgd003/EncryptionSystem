@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Result · Encryption System{% endblock %}
+
+{% block content %}
+<h1>Encryption Result</h1>
+
+<div class="card">
+  <div class="result-row">
+    <span class="result-key">Original Text</span>
+    <span class="result-val">{{ r.original }}</span>
+  </div>
+  <div class="result-row">
+    <span class="result-key">Algorithm</span>
+    <span class="result-val">{{ r.algorithm_name }}</span>
+  </div>
+  <div class="result-row">
+    <span class="result-key">Secret Key</span>
+    <span class="result-val">{{ r.key }}</span>
+  </div>
+
+  <hr>
+
+  <div class="result-row">
+    <span class="result-key">Encryption Steps</span>
+    <pre class="steps">{% for s in r.encryption_steps %}{{ s }}
+{% endfor %}</pre>
+  </div>
+  <div class="result-row">
+    <span class="result-key">Encrypted Text</span>
+    <span class="result-val encrypted">{{ r.encrypted }}</span>
+  </div>
+
+  <hr>
+
+  <div class="result-row">
+    <span class="result-key">Decryption Steps</span>
+    <pre class="steps">{% for s in r.decryption_steps %}{{ s }}
+{% endfor %}</pre>
+  </div>
+  <div class="result-row">
+    <span class="result-key">Decrypted Text</span>
+    <span class="result-val decrypted">{{ r.decrypted }}</span>
+  </div>
+
+  <hr>
+
+  <!-- Bonus Level 3: execution time -->
+  <div class="result-row">
+    <span class="result-key">Execution Time</span>
+    <span class="result-val">
+      Encryption: {{ r.enc_time }} ms &nbsp;·&nbsp;
+      Decryption: {{ r.dec_time }} ms
+    </span>
+  </div>
+</div>
+
+<!-- Bonus Level 1: download buttons -->
+<div class="actions">
+  <form action="{{ url_for('download') }}" method="post">
+    <input type="hidden" name="content" value="{{ r.encrypted }}">
+    <input type="hidden" name="kind" value="encrypted">
+    <button type="submit" class="btn btn-secondary">Download Encrypted</button>
+  </form>
+  <form action="{{ url_for('download') }}" method="post">
+    <input type="hidden" name="content" value="{{ r.decrypted }}">
+    <input type="hidden" name="kind" value="decrypted">
+    <button type="submit" class="btn btn-secondary">Download Decrypted</button>
+  </form>
+  <a href="{{ url_for('index') }}" class="btn">Encrypt Another</a>
+</div>
+{% endblock %}

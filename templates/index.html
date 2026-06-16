@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Home · Encryption System{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <span class="hero-tag">Cybersecurity Programming Project</span>
+  <h1>Encrypt &amp; Decrypt Text</h1>
+  <p class="lead">Type a message or upload a file, pick an algorithm and a key,
+     then view every step of the encryption and decryption.</p>
+</section>
+
+<form class="card" action="{{ url_for('encrypt') }}" method="post" enctype="multipart/form-data">
+  <label class="field-label">Plaintext Input</label>
+  <textarea name="text" rows="5"
+            placeholder="Type your message here, or upload a .txt file below..."></textarea>
+
+  <label class="field-label">Upload .txt File (optional)</label>
+  <input type="file" name="file" accept=".txt">
+
+  <label class="field-label">Select Algorithm</label>
+  <div class="algo-select">
+    {% for value, name in algorithms.items() %}
+      <label class="algo-option">
+        <input type="radio" name="algorithm" value="{{ value }}"
+               {% if loop.first %}checked{% endif %}>
+        <span>{{ name }}</span>
+      </label>
+    {% endfor %}
+  </div>
+
+  <label class="field-label">Secret Key (integer)</label>
+  <input type="number" name="key" value="3" required>
+
+  <button type="submit" class="btn">Encrypt &amp; Decrypt</button>
+</form>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}History · Encryption System{% endblock %}
+
+{% block content %}
+<h1>History</h1>
+<p class="lead">
+  {% if current_user.is_authenticated %}
+    Showing records for <strong>{{ current_user.username }}</strong>.
+  {% else %}
+    Showing anonymous records. <a href="{{ url_for('login') }}">Log in</a>
+    to keep a private history.
+  {% endif %}
+</p>
+
+<!-- Bonus Level 4: performance comparison chart -->
+<div class="card">
+  <h2>Average Performance (ms)</h2>
+  <canvas id="perfChart" height="120"></canvas>
+</div>
+
+<!-- Bonus Level 2: history log table -->
+<div class="card">
+  <h2>Log</h2>
+  {% if rows %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Time</th><th>Algorithm</th><th>Original</th>
+          <th>Encrypted</th><th>Decrypted</th><th>Key</th>
+          <th>Enc (ms)</th><th>Dec (ms)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>
+          <td>{{ row['id'] }}</td>
+          <td>{{ row['created_at'] }}</td>
+          <td>{{ row['algorithm'] }}</td>
+          <td>{{ row['original'] }}</td>
+          <td>{{ row['encrypted'] }}</td>
+          <td>{{ row['decrypted'] }}</td>
+          <td>{{ row['key'] }}</td>
+          <td>{{ row['enc_time_ms'] }}</td>
+          <td>{{ row['dec_time_ms'] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <p>No records yet. Encrypt something on the home page first.</p>
+  {% endif %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const chartData = {{ chart | tojson }};
+  const labels = Object.keys(chartData);
+  const encData = labels.map(k => chartData[k].enc);
+  const decData = labels.map(k => chartData[k].dec);
+
+  new Chart(document.getElementById('perfChart'), {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: 'Encryption (ms)', data: encData,
+          backgroundColor: '#0a2540' },
+        { label: 'Decryption (ms)', data: decData,
+          backgroundColor: '#0a66c2' }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { labels: { color: '#1a1a1a' } } },
+      scales: {
+        y: { beginAtZero: true, ticks: { color: '#57606a' }, grid: { color: '#e1e7ed' } },
+        x: { ticks: { color: '#57606a' }, grid: { color: '#f0f0f2' } }
+      }
+    }
+  });
+</script>
+{% endblock %}

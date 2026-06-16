@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Encryption System{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a class="logo" href="{{ url_for('index') }}">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"></path>
+          <rect x="9" y="11" width="6" height="5" rx="1"></rect>
+          <path d="M10 11V9a2 2 0 0 1 4 0v2"></path>
+        </svg>
+        <span class="logo-text">Encryption<strong>System</strong></span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="{{ url_for('index') }}" class="nav-item {% if request.endpoint == 'index' %}active{% endif %}">Home</a>
+        <a href="{{ url_for('history') }}" class="nav-item {% if request.endpoint == 'history' %}active{% endif %}">History</a>
+        {% if current_user.is_authenticated %}
+          <span class="nav-user">{{ current_user.username }}</span>
+          <a href="{{ url_for('logout') }}" class="nav-btn">Logout</a>
+        {% else %}
+          <a href="{{ url_for('login') }}" class="nav-item {% if request.endpoint == 'login' %}active{% endif %}">Login</a>
+          <a href="{{ url_for('register') }}" class="nav-btn">Register</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    Cybersecurity Programming &middot; Multi-Algorithm Encryption System
+  </footer>
+</body>
+</html>
