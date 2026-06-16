@@ -54,7 +54,6 @@ project/
 ├── static/
 │   └── style.css
 ├── screenshots/        # Images used in this README
-├── sample_texts/       # Sample .txt files for testing
 └── uploads/            # Uploaded .txt files (ignored by git)
 ```
 
